@@ -140,6 +140,11 @@ class conman::common {
             ensure => 'present'
         }
     }
+    if (! defined(Package['expect'])) {
+        package { 'expect':
+            ensure => 'present'
+        }
+    }
 
     $prefixdir="${stow::params::stowdir}/conman-${conman::params::version}"
     $configure_opts="--with-tcp-wrappers --with-freeipmi"
@@ -192,7 +197,15 @@ class conman::common {
         require => Stow::Install["conman-${conman::params::version}"]
         #notify  => Service['conman'],
     }
-
+    file { "${stow::params::stowdir}/${archivename}/${conman::params::configfile}":
+        ensure  => 'link',
+        target  => "${conman::params::configfile}",
+        require => [
+                    Stow::Install["conman-${conman::params::version}"],
+                    Concat["${conman::params::configfile}"]
+                    ]       
+    }
+    
     # Let's go
     concat::fragment { "${conman::params::configfile}_header":
         target  => "${conman::params::configfile}",
@@ -202,21 +215,20 @@ class conman::common {
     }
 
     # Release the ConMan service
-    # service { 'conman':
-    #     name       => "${conman::params::servicename}",
-    #     enable     => true,
-    #     ensure     => running,
-    #     hasrestart => "${conman::params::hasrestart}",
-    #     pattern    => "${conman::params::processname}",
-    #     hasstatus  => "${conman::params::hasstatus}",
-    #     require    => [
-    #                    File["/etc/init.d/conman"],
-    #                    File["/etc/default/conman"],
-    #                    Concat["${conman::params::configfile}"]
-    #                    ]
-    # }
-
-
+    service { 'conman':
+        name       => "${conman::params::servicename}",
+        enable     => true,
+        ensure     => running,
+        hasrestart => "${conman::params::hasrestart}",
+        pattern    => "${conman::params::processname}",
+        hasstatus  => "${conman::params::hasstatus}",
+        require    => [
+                       File["/etc/init.d/conman"],
+                       File["/etc/default/conman"],
+                       File["${stow::params::stowdir}/${archivename}/${conman::params::configfile}"],
+                       Concat["${conman::params::configfile}"]
+                       ]
+    }
 
 }
 

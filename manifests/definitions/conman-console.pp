@@ -109,7 +109,7 @@ define conman::console (
     $connector      = '',
     $bmcname_suffix = '-bmc',
     $login          = '',
-    $password       = ''
+    $password       = '',
     $logfile        = '',
     $min_index      = 0,
     $max_index      = 0,
@@ -134,6 +134,17 @@ define conman::console (
         }
     }
 
+    $device_prefix = $connector ? {
+        'ipmi:' => "${connector}",
+        default => "/usr/local/lib/conman/exec/${connector} "
+    }
+    $connector_login_args = $login ? {
+        ''      => '',
+        default => $password ? {
+            ''      => " ${login}",
+            default => " ${login} ${password}"
+        }
+    }
     # if content is passed, use that, else if source is passed use that
     $real_content = $content ? {
         '' => $source ? {
@@ -150,19 +161,7 @@ define conman::console (
         }
     }
 
-    $device_prefix = $connector ? {
-        'ipmi:' => "${connector}",
-        default => "${connector} "
-    }
-    $connector_login_args = $login ? {
-        ''      => '',
-        default => $password ? {
-            ''      => " ${login}",
-            default => " ${login} ${password}"
-        }
-    }
-
-    concat::fragment { "${conman::params::configfile}_header":
+    concat::fragment { "${conman::params::configfile}_${basename}":
         target  => "${conman::params::configfile}",
         ensure  => "${ensure}",
         content => $real_content,
