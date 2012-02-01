@@ -122,6 +122,11 @@ class conman::params {
     # Where to get the sources
     $conman_src_url = 'http://conman.googlecode.com/files/'
 
+    $extra_packages = $::operatingsystem ? {
+        /(?i-mx:ubuntu|debian)/ => [  'expect', 'libfreeipmi-dev', 'libipmiconsole-dev'],
+        default => [ 'expect', 'freeipmi' ]
+    }
+    
     # Where to build and compile the package
     $builddir = '/usr/local/src/'
     $builddir_mode = $::operatingsystem ? {

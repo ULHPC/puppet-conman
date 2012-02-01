@@ -140,23 +140,24 @@ class conman::common {
             ensure => 'present'
         }
     }
-    if (! defined(Package['expect'])) {
-        package { 'expect':
-            ensure => 'present'
-        }
+    package { $conman::params::extra_packages:
+        ensure => 'present'
     }
-
+    
     $prefixdir="${stow::params::stowdir}/conman-${conman::params::version}"
     $configure_opts="--with-tcp-wrappers --with-freeipmi"
     exec { "Compile ConMan sources":
         path    => '/sbin:/usr/bin:/usr/sbin:/bin',
         cwd     => "${conman::params::builddir}/${archivename}",
         command => "./configure --prefix=${prefixdir} ${configure_opts} && make && make install",
-        creates => "${stow::params::stowdir}/${archivename}",
-        require => Package['build-essential']
+        creates => "${stow::params::stowdir}/${archivename}/",
+        require => [ Package['build-essential'],
+                     Exec["Untar ConMan sources"]
+                     ]
     }
     # Now install it with stow
     stow::install { "conman-${conman::params::version}":
+        require => Exec["Compile ConMan sources"]
     }
 
     # Prepare le log directory
