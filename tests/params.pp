@@ -15,7 +15,7 @@
 
 include 'conman::params'
 
-$names = ["ensure", "coredump", "coredumpdir", "keepalive", "loopback", "port", "resetcmd", "tcpwrappers", "timestamp", "serialopts", "ipmiopts", "version", "conman_src_url", "extra_packages", "builddir", "builddir_mode", "builddir_owner", "builddir_group", "logdir", "logdir_mode", "logdir_owner", "logdir_group", "pidfile", "processname", "servicename", "hasstatus", "hasrestart", "configfile", "configfile_mode", "configfile_owner", "configfile_group"]
+$names = ['ensure', 'coredump', 'coredumpdir', 'keepalive', 'loopback', 'port', 'resetcmd', 'tcpwrappers', 'timestamp', 'serialopts', 'ipmiopts', 'version', 'conman_src_url', 'extra_packages', 'builddir', 'builddir_mode', 'builddir_owner', 'builddir_group', 'logdir', 'logdir_mode', 'logdir_owner', 'logdir_group', 'pidfile', 'processname', 'servicename', 'hasstatus', 'hasrestart', 'configfile', 'configfile_mode', 'configfile_owner', 'configfile_group']
 
 notice("conman::params::ensure = ${conman::params::ensure}")
 notice("conman::params::coredump = ${conman::params::coredump}")
