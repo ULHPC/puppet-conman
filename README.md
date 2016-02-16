@@ -21,8 +21,13 @@ Configure and manage ConMan: The Console Manager.
 This module implements the following elements: 
 
 * __Puppet classes__:
+    - `conman` 
+    - `conman::common` 
+    - `conman::debian` 
+    - `conman::params` 
 
 * __Puppet definitions__: 
+    - `conman::console` 
 
 All these components are configured through a set of variables you will find in
 [`manifests/params.pp`](manifests/params.pp). 
@@ -35,6 +40,7 @@ See `docs/contributing.md` for more details on the steps you shall follow to hav
 See [`metadata.json`](metadata.json). In particular, this module depends on 
 
 * [puppetlabs/stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib)
+* [puppetlabs/concat](https://forge.puppetlabs.com/puppetlabs/concat)
 
 ## Overview and Usage
 
@@ -51,6 +57,26 @@ Use it as follows:
 
 See also [`tests/init.pp`](tests/init.pp)
 
+### Class `conman::debian`
+
+See [`tests/debian.pp`](tests/debian.pp)
+
+### Definition `conman::console`
+
+The definition `conman::console` provides ...
+This definition accepts the following parameters:
+
+* `$ensure`: default to 'present', can be 'absent'
+* `$content`: specify the contents of the directive as a string
+* `$source`: copy a file as the content of the directive.
+
+Example:
+
+        conman::console { 'toto':
+		      ensure => 'present',
+        }
+
+See also [`tests/console.pp`](tests/console.pp)
 
 
 ## Librarian-Puppet / R10K Setup
