@@ -1,0 +1,50 @@
+{
+  "name": "ULHPC/conman",
+  "version": "0.1.0",
+  "author": "S. Varrette, H. Cartiaux, V. Plugaru, S. Diehl aka. UL HPC Management Team",
+  "mail": "hpc-sysadmins@uni.lu",
+  "summary": "Configure and manage ConMan: The Console Manager",
+  "description": "Configure and manage ConMan: The Console Manager",
+  "license": "GPL-3.0",
+  "source": "https://github.com/ULHPC/puppet-conman",
+  "docs_project": "ulhpc-puppet-conman",
+  "project_page": "https://github.com/ULHPC/puppet-conman",
+  "issues_url": "https://github.com/ULHPC/puppet-conman/issues",
+  "forge_url": "https://forge.puppetlabs.com/ULHPC/conman",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">=4.2.2 <5.0.0"
+    },
+    {
+      "name": "/stow",
+      "version_requirement": ">0"
+    },
+    {
+      "name": "/concat",
+      "version_requirement": ">=2.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    }
+  ],
+  "tags": [
+    "conman",
+    "console"
+  ],
+  "classes": [
+    "conman",
+    "conman::common",
+    "conman::debian",
+    "conman::params"
+  ],
+  "definitions": [
+    "conman::console"
+  ]
+}

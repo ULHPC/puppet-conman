@@ -1,0 +1,14 @@
+##
+# console name="<str>" dev="<str>" \
+#   [log="<file>"] [logopts="<str>"] [seropts="<str>"] [ipmiopts="<str>"]
+##
+<% device_suffix = bmcname_suffix -%>
+
+
+<% if min_index < max_index -%>
+<%      for i in min_index..max_index -%>
+console name="<%= basename %><%= i %>" dev="<%= device_prefix %><%= basename %><%= i %><%= bmcname_suffix %><%= connector_login_args %>"
+<%      end -%>
+<% else -%> 
+console name="<%= name %>" dev="<%= device_prefix %><%= name %><%= bmcname_suffix %><%= connector_login_args %>"
+<% end -%>
