@@ -15,7 +15,7 @@
 
 include 'conman::params'
 
-$names = ["ensure", "protocol", "port", "packagename"]
+$names = ['ensure', 'protocol', 'port', 'packagename']
 
 notice("conman::params::ensure = ${conman::params::ensure}")
 notice("conman::params::protocol = ${conman::params::protocol}")

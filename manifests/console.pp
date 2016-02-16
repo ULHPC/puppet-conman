@@ -135,7 +135,7 @@ define conman::console (
     }
 
     $device_prefix = $connector ? {
-        'ipmi:' => "${connector}",
+        'ipmi:' => $connector,
         default => "/usr/local/lib/conman/exec/${connector} "
     }
     $connector_login_args = $login ? {
@@ -162,8 +162,8 @@ define conman::console (
     }
 
     concat::fragment { "${conman::params::configfile}_${basename}":
-        target  => "${conman::params::configfile}",
-        ensure  => "${ensure}",
+        ensure  => $ensure,
+        target  => $conman::params::configfile,
         content => $real_content,
         source  => $real_source,
         order   => '50',

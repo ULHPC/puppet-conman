@@ -30,9 +30,9 @@ class conman::params {
     ###########################################
 
     # ensure the presence (or absence) of conman
-    $ensure = $conman_ensure ? {
+    $ensure = $::conman_ensure ? {
         ''      => 'present',
-        default => "${conman_ensure}"
+        default => $::conman_ensure
     }
 
     # Whether the daemon should generate a core dump file.  This file will be
@@ -126,7 +126,7 @@ class conman::params {
         /(?i-mx:ubuntu|debian)/ => [  'expect', 'libfreeipmi-dev', 'libipmiconsole-dev'],
         default => [ 'expect', 'freeipmi' ]
     }
-    
+
     # Where to build and compile the package
     $builddir = '/usr/local/src/'
     $builddir_mode = $::operatingsystem ? {
@@ -187,4 +187,3 @@ class conman::params {
     }
 
 }
-
