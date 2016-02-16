@@ -21,11 +21,16 @@ class conman::common {
         group  => $conman::params::builddir_group,
         mode   => $conman::params::builddir_mode,
     }
+
+    package { ['wget', 'bzip2']:
+      ensure => 'present',
+    }
+
     $archivename = "conman-${conman::params::version}"
     $archivefile = "${archivename}.tar.bz2"
 
     exec { 'Get ConMan sources':
-        command => "wget ${conman::params::conman_src_url}/${archivefile}",
+        command => "wget ${conman::params::conman_src_url}/releases/download/${archivename}/${archivefile}",
         path    => '/sbin:/usr/bin:/usr/sbin:/bin',
         cwd     => $conman::params::builddir,
         creates => "${conman::params::builddir}/${archivefile}",
@@ -48,7 +53,6 @@ class conman::common {
                     ]
     }
 
-    include stow
     # TODO: put this in some module?
     if (! defined(Package['build-essential'])) {
         package { 'build-essential':
@@ -59,20 +63,15 @@ class conman::common {
         ensure => 'present'
     }
 
-    $prefixdir="${stow::params::stowdir}/conman-${conman::params::version}"
     $configure_opts='--with-tcp-wrappers --with-freeipmi'
     exec { 'Compile ConMan sources':
         path    => '/sbin:/usr/bin:/usr/sbin:/bin',
         cwd     => "${conman::params::builddir}/${archivename}",
-        command => "./configure --prefix=${prefixdir} ${configure_opts} && make && make install",
-        creates => "${stow::params::stowdir}/${archivename}/",
+        command => "./configure ${configure_opts} && make && make install",
+        creates => "/usr/local/bin/conman",
         require => [ Package['build-essential'],
                     Exec['Untar ConMan sources']
                     ]
-    }
-    # Now install it with stow
-    stow::install { "conman-${conman::params::version}":
-        require => Exec['Compile ConMan sources']
     }
 
     # Prepare le log directory
@@ -87,44 +86,42 @@ class conman::common {
         ensure  => 'link',
         target  => '/usr/local/etc/init.d/conman',
         #creates => "/etc/init.d/conman",
-        require => Stow::Install["conman-${conman::params::version}"]
+        require => Exec['Compile ConMan sources'],
     }
 
     file { '/etc/default/conman':
         ensure  => 'link',
         target  => '/usr/local/etc/default/conman',
         #creates => "/etc/default/conman",
-        require => Stow::Install["conman-${conman::params::version}"]
+        require => Exec['Compile ConMan sources'],
     }
 
     file {'/etc/logrotate.d/conman':
         ensure  => 'link',
         target  => '/usr/local/etc/logrotate.d/conman',
         #creates => "/etc/init.d/conman",
-        require => Stow::Install["conman-${conman::params::version}"]
+        require => Exec['Compile ConMan sources'],
     }
 
-    include concat::setup
     concat { $conman::params::configfile:
         warn    => false,
         owner   => $conman::params::configfile_owner,
         group   => $conman::params::configfile_group,
         mode    => $conman::params::configfile_mode,
-        require => Stow::Install["conman-${conman::params::version}"]
+        require => Exec['Compile ConMan sources'],
         #notify  => Service['conman'],
     }
-    file { "${stow::params::stowdir}/${archivename}/${conman::params::configfile}":
+    file { "/usr/local/${conman::params::configfile}":
         ensure  => 'link',
         target  => $conman::params::configfile,
         require => [
-                    Stow::Install["conman-${conman::params::version}"],
+                    Exec['Compile ConMan sources'],
                     Concat[$conman::params::configfile]
                     ]
     }
 
     # Let's go
     concat::fragment { "${conman::params::configfile}_header":
-        ensure  => $conman::ensure,
         target  => $conman::params::configfile,
         content => template('conman/conman.conf.erb'),
         order   => '01',
@@ -141,7 +138,7 @@ class conman::common {
         require    => [
                         File['/etc/init.d/conman'],
                         File['/etc/default/conman'],
-                        File["${stow::params::stowdir}/${archivename}/${conman::params::configfile}"],
+                        File["/usr/local/${conman::params::configfile}"],
                         Concat[$conman::params::configfile]
                         ]
     }

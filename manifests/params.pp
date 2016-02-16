@@ -120,7 +120,7 @@ class conman::params {
     # ConMan version
     $version = '0.2.7'
     # Where to get the sources
-    $conman_src_url = 'http://conman.googlecode.com/files/'
+    $conman_src_url = 'https://github.com/dun/conman'
 
     $extra_packages = $::operatingsystem ? {
         /(?i-mx:ubuntu|debian)/ => [  'expect', 'libfreeipmi-dev', 'libipmiconsole-dev'],
