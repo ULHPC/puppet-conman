@@ -68,7 +68,7 @@ class conman::common {
         path    => '/sbin:/usr/bin:/usr/sbin:/bin',
         cwd     => "${conman::params::builddir}/${archivename}",
         command => "./configure ${configure_opts} && make && make install",
-        creates => "/usr/local/bin/conman",
+        creates => '/usr/local/bin/conman',
         require => [ Package['build-essential'],
                     Exec['Untar ConMan sources']
                     ]
