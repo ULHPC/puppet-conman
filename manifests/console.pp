@@ -146,6 +146,7 @@ define conman::console (
         }
     }
     # if content is passed, use that, else if source is passed use that
+
     $real_content = $content ? {
         '' => $source ? {
             ''      => template('conman/conman_console_entry.erb'),
@@ -161,13 +162,20 @@ define conman::console (
         }
     }
 
-    concat::fragment { "${conman::params::configfile}_${basename}":
-        ensure  => $ensure,
-        target  => $conman::params::configfile,
-        content => $real_content,
-        source  => $real_source,
-        order   => '50',
+    if $real_source != '' {
+      concat::fragment { "${conman::params::configfile}_${basename}":
+          target  => $conman::params::configfile,
+          source  => $real_source,
+          order   => '50',
+      }
+    } else {
+      concat::fragment { "${conman::params::configfile}_${basename}":
+          target  => $conman::params::configfile,
+          content => $real_content,
+          order   => '50',
+      }
     }
+
 
 
 }

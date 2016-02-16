@@ -17,4 +17,6 @@
 #
 node default {
     include conman
+
+    conman::console { 'test': }
 }
