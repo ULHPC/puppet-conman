@@ -65,7 +65,7 @@ class conman::common {
 
     $configure_opts='--with-tcp-wrappers --with-freeipmi'
     exec { 'Compile ConMan sources':
-        path    => '/sbin:/usr/bin:/usr/sbin:/bin',
+        path    => "/sbin:/usr/bin:/usr/sbin:/bin:${conman::params::builddir}/${archivename}",
         cwd     => "${conman::params::builddir}/${archivename}",
         command => "./configure ${configure_opts} && make && make install",
         creates => '/usr/local/bin/conman',

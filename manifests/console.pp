@@ -145,37 +145,24 @@ define conman::console (
             default => " ${login} ${password}"
         }
     }
+    
     # if content is passed, use that, else if source is passed use that
-
-    $real_content = $content ? {
-        '' => $source ? {
-            ''      => template('conman/conman_console_entry.erb'),
-            default => ''
-        },
-        default => $content
-    }
-    $real_source = $source ? {
-        '' => '',
-        default => $content ? {
-            ''      => $source,
-            default => ''
+    case $content {
+        '': {
+            case $source {
+                '': {
+                    $real_content = template('conman/conman_console_entry.erb')
+                }
+                default: { $real_source = $source }
+            }
         }
+        default: { $real_content = $content }
     }
 
-    if $real_source != '' {
-      concat::fragment { "${conman::params::configfile}_${basename}":
-          target  => $conman::params::configfile,
-          source  => $real_source,
-          order   => '50',
-      }
-    } else {
-      concat::fragment { "${conman::params::configfile}_${basename}":
-          target  => $conman::params::configfile,
-          content => $real_content,
-          order   => '50',
-      }
+    concat::fragment { "${conman::params::configfile}_${basename}":
+        target  => $conman::params::configfile,
+        content => $real_content,
+        source  => $real_source,
+        order   => '50',
     }
-
-
-
 }
