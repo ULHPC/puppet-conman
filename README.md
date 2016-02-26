@@ -49,26 +49,26 @@ See [`metadata.json`](metadata.json). In particular, this module depends on
 This is the main class defined in this module.
 It accepts the following parameters: 
 
-* `$ensure`: *Default*: 'present'. Ensure the presence (or absence) of conman
+* `$ensure`: *Default*: 'present'. Ensure the presence (or absence) of conman.
 * `$coredump`: *Default*: false. Specifies whether the daemon should generate a
              core dump file.
 * `$coredumpdir`: Specifies the directory where the daemon tries to write core dump files.
 * `$keepalive`: *Default*: true. Specifies whether the daemon will use TCP
-             keep-alives for detecting dead connections
+             keep-alives for detecting dead connections.
 * `$loopback`: *Default*: false. Specifies whether the daemon will bind its
              socket to the loopback address, thereby only accepting local
-             client connections directed to that address (127.0.0.1)
-* `$port`: specifies the port on which the daemon will listen for client connections.
-* `$resetcmd`: specifies a command string to be invoked by a subshell upon
-             receipt of the client's "reset" escape
-* `$tcpwrappers`: *Default*: false. specifies whether the daemon will use Wietse
+             client connections directed to that address (127.0.0.1).
+* `$port`: Specifies the port on which the daemon will listen for client connections.
+* `$resetcmd`: Specifies a command string to be invoked by a subshell upon
+             receipt of the client's "reset" escape.
+* `$tcpwrappers`: *Default*: false. Specifies whether the daemon will use Wietse
              Venema's TCP-Wrappers when accepting client connections.
-* `$timestamp`: *Default*:0 (ie, no timestamps). specifies the interval between
+* `$timestamp`: *Default*: 0 (i.e. no timestamps). Specifies the interval between
              timestamps written to all console log files.  The interval is an
              integer that may be followed by a single-char modifier; 'm' for
              minutes (the default), 'h' for hours, or 'd' for days.
 * `$serialopts`: *Default*: '9600,8n1' (for 9600 bps, 8 data bits, no parity, 1
-             stop bit). Specifies default options for local serial devices;
+             stop bit). Specifies default options for local serial devices.
 
 Use it as follows:
 
@@ -90,41 +90,41 @@ Defines a console being managed by the daemon.
 
 Pre-requisites:
 
- * The class 'conman' should have been instanciated
+ * The class `conman` should have been instanciated
 
 This definition accepts the following parameters:
 
-* `$ensure`:
-   default to 'present', can be 'absent'.
-   Default: 'present'
+* `$ensure`: Default to 'present', can be 'absent'.
 
 * `$content`:
   Specify the contents of the console entry as a string. Newlines, tabs,
-  and spaces can be specified using the escaped syntax (e.g., \n for a newline)
+  and spaces can be specified using the escaped syntax (e.g. \n for a newline).
 
 * `$source`:
   Copy a file as the content of the console entry.
   Uses checksum to determine when a file should be copied.
   Valid values are either fully qualified paths to files, or URIs. Currently
   supported URI types are puppet and file.
-  In neither the 'source' or 'content' parameter is specified, then the
+  If neither the 'source' nor 'content' parameter is specified, then the
   following parameters can be used to set the console entry.
 
 * `$consolename`:
   Defines a console being managed by the daemon. You may also use the name of
-  the definition for this directive
+  the definition for this directive.
 
 * `$connector`:
   Specifies the type of connector to use to connect to the console of the
   node.
-   - An external process-based connection is defined by the "<path> <args>"
-     format (where <path> is the pathname to an executable file/script, and
-     any additional <args> are space-delimited).
-     Ex:      connector => '/path/to/script <args>'
-   - An IPMI Serial-Over-LAN connection is defined by the "ipmi:<host>" format
-     (where "ipmi:" is the literal string and <host> is a hostname or IPv4
+   - An external process-based connection is defined by the "\<path\> \<args\>"
+     format (where \<path\> is the pathname to an executable file/script, and
+     any additional \<args\> are space-delimited).
+     
+     Example:      `connector => '/path/to/script <args>'`
+   - An IPMI Serial-Over-LAN connection is defined by the "ipmi:\<host\>" format
+     (where "ipmi:" is the literal string and \<host\> is a hostname or IPv4
      address). Consequently, you'll have to use in this general:
-           connector => 'ipmi:'
+           `connector => 'ipmi:'`
+
 
 * `$bmcname_suffix`:
    Define the suffix to apply to the name of the console (i.e. the host) to
